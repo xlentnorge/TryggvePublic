@@ -18,8 +18,6 @@ jobs:
     name: SCA
     uses: ./.github/workflows/sca.yml
     secrets: inherit
-    with:
-      file-path: PublicSolution.sln
 
   sast:
     permissions:
