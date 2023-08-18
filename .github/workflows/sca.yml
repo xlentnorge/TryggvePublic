@@ -7,6 +7,9 @@ on:
       file-path:
         required: true
         type: string
+    secrets:
+      SNYK_KEY:
+        required: true
 
 env:
   NETCORE_VERSION: '7.0.x'
