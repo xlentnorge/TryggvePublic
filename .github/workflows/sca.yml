@@ -3,13 +3,6 @@ name: 20 - SCA
 on:
   workflow_dispatch:
   workflow_call:
-    inputs:
-      file-path:
-        required: true
-        type: string
-    secrets:
-      SNYK_KEY:
-        required: true
 
 env:
   NETCORE_VERSION: '7.0.x'
@@ -45,7 +38,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_KEY }}
         with:
-          args: --sarif-file-output=snyk.sarif --file=${{ inputs.file-path }}
+          args: --sarif-file-output=snyk.sarif --file=PublicSolution.sln
       - name: Print SARIF analysis report
         run: | 
           cat snyk.sarif
