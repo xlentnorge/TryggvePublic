@@ -34,7 +34,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_KEY }}
         with:
-          args: --sarif-file-output=snyk.sarif --file=TryggveApi.sln
+          args: --sarif-file-output=snyk.sarif
 
       - name: Print SARIF analysis report
         run: | 
