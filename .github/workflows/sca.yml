@@ -3,6 +3,10 @@ name: 20 - SCA
 on:
   workflow_dispatch:
   workflow_call:
+    inputs:
+      file-path:
+        required: true
+        type: string
 
 env:
   NETCORE_VERSION: '7.0.x'
@@ -28,14 +32,17 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
+      - name: Bash
+        run: |
+          ls -la
+
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/dotnet@master
         continue-on-error: true # To make sure that SARIF upload gets called
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_KEY }}
         with:
-          args: --sarif-file-output=snyk.sarif --file=PublicSolution.sln
-
+          args: --sarif-file-output=snyk.sarif --file=${{ inputs.file-path }}
       - name: Print SARIF analysis report
         run: | 
           cat snyk.sarif
