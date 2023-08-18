@@ -34,7 +34,7 @@ jobs:
 
       - name: Bash
         run: |
-          ls -la
+          find .
 
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/dotnet@master
