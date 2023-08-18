@@ -1,0 +1,26 @@
+name: 10 - Build pipeline
+
+on:
+    workflow_dispatch:
+    workflow_call:
+
+env:
+  NETCORE_VERSION: '7.0.x'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.NETCORE_VERSION }}
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal

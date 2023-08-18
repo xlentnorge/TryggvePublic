@@ -1,0 +1,29 @@
+name: 40 - SAST
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  SAST-CODEQL:
+    name: Build and SAST CodeQL
+    runs-on: ubuntu-latest
+
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp' ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+    
+      - name: Intitialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages:: ${{ matrix.language }}

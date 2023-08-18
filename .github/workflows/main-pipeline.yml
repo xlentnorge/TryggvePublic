@@ -1,0 +1,30 @@
+name: 00 - Main CI / CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+  
+  sca:
+    needs: build
+    name: SCA
+    uses: ./.github/workflows/sca.yml
+    secrets: inherit
+
+  sast:
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    needs: build
+    name: SAST
+    uses: ./.github/workflows/sast.yml
+    secrets: inherit

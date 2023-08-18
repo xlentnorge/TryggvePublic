@@ -1,0 +1,47 @@
+name: 20 - SCA
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+env:
+  NETCORE_VERSION: '7.0.x'
+
+jobs:
+  sca:
+    strategy:
+      fail-fast: false
+    runs-on: "ubuntu-latest"
+    defaults:
+      run:
+        shell: bash
+    name: SCA Dotnet Core project
+    steps:
+      - name: Checkout action
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.NETCORE_VERSION }}
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/dotnet@master
+        continue-on-error: true # To make sure that SARIF upload gets called
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_KEY }}
+        with:
+          args: --sarif-file-output=snyk.sarif --file=TryggveApi.sln
+
+      - name: Print SARIF analysis report
+        run: | 
+          cat snyk.sarif
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: snyk-report
+          path: snyk.sarif
