@@ -9,6 +9,13 @@ env:
 
 jobs:
   sca:
+    permissions:
+      actions: read
+      security-events: write
+      id-token: write
+      contents: read
+      issues: write
+      pull-requests: write
     strategy:
       fail-fast: false
     runs-on: "ubuntu-latest"
