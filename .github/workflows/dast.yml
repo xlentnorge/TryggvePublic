@@ -1,0 +1,29 @@
+name: 50 - DAST
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  SAST-CODEQL:
+    name: Build and DAST
+    runs-on: ubuntu-latest
+
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp' ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+    
+      - name: ZAP Scan
+        uses: zaproxy/action-baseline@v0.9.0
+        with:
+          target: 'https://www.zaproxy.org'
