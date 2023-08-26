@@ -9,7 +9,6 @@ jobs:
     name: Build and DAST
     runs-on: ubuntu-latest
     permissions: 
-      deployments: write
       id-token: write
       issues: write
       discussions: write
