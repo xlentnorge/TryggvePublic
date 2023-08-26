@@ -9,7 +9,6 @@ jobs:
     name: Build and DAST
     runs-on: ubuntu-latest
     permissions: 
-      actions: write
       checks: write
       contents: write
       deployments: write
