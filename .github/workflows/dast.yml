@@ -9,8 +9,7 @@ jobs:
     name: Build and DAST
     runs-on: ubuntu-latest
     permissions: 
-      security-events: write
-      statuses: write 
+      security-events: none
     
     strategy:
       fail-fast: false
