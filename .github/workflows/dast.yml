@@ -8,6 +8,7 @@ jobs:
   SAST-CODEQL:
     name: Build and DAST
     runs-on: ubuntu-latest
+    permissions: read-all|write-all
     
     strategy:
       fail-fast: false
