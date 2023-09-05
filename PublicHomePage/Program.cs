@@ -1,7 +1,15 @@
+using PublicHomePage.Clients;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<IQuoteClient, QuoteClient>();
+builder.Services.AddHttpClient<IQuoteClient, QuoteClient>(client =>
+{
+    client.BaseAddress = new Uri("https://type.fit/api/");
+});
 
 var app = builder.Build();
 

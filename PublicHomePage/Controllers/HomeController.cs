@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using PublicHomePage.Clients;
 using PublicHomePage.Models;
 
 namespace PublicHomePage.Controllers;
@@ -7,14 +8,17 @@ namespace PublicHomePage.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly IQuoteClient _quoteClient;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, IQuoteClient quoteClient)
     {
         _logger = logger;
+        _quoteClient = quoteClient;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
+        var quotes = await _quoteClient.GetQuotes();
         return View();
     }
 
