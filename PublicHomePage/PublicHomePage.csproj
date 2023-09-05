@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <!-- Known vulnerability: -->
-    <PackageReference Include="Microsoft.NETCore.App" Version="1.1.1" />
+    <PackageReference Include="Microsoft.NETCore.App" Version="2.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <!-- END Known vulnerability -->
   </ItemGroup>
