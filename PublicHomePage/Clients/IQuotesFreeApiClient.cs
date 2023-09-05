@@ -2,7 +2,7 @@ using PublicHomePage.Models.QuoteClient;
 
 namespace PublicHomePage.Clients;
 
-public interface IQuoteClient
+public interface IQuotesFreeApiClient
 {
     Task<IEnumerable<Quote>> GetQuotes();
 }
