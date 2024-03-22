@@ -13,7 +13,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Build Docker image
-      run: docker build . -t tryggve-public:zap-test
+      run: docker build ./PublicHomePage -t tryggve-public:zap-test
 
     - name: Run Docker container
       run: docker run -d -p 8080:80 tryggve-public:zap-test
