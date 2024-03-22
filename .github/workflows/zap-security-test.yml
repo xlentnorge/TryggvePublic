@@ -1,7 +1,10 @@
 name: ZAP Security Test
 
-on: [push]
-
+#on: [push]
+on:
+  push:
+    branches:
+      - feature/zap-integration
 jobs:
   security-test:
     runs-on: ubuntu-latest
