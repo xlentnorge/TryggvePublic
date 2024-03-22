@@ -19,7 +19,10 @@ jobs:
       run: docker run -d -p 8080:80 tryggve-public:zap-test
 
     - name: Run ZAP Scan
-      run: docker run -v $(pwd):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-full-scan.py -t http://localhost:8080 -J report.json
+      uses: zaproxy/action-full-scan@v0.4.0
+      with:
+        target: 'http://localhost:8080' # Adjust if your app uses a different port
+        cmd_options: '-J report.json -v $(pwd):/zap/wrk/:rw' # Additional ZAP CLI options as needed
 
     # Additional step to upload ZAP report to GitHub Actions artifacts, if needed
     - uses: actions/upload-artifact@v2
