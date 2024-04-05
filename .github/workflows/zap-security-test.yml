@@ -1,0 +1,28 @@
+name: ZAP Security Test
+
+on: [push]
+
+jobs:
+  security-test:
+    runs-on: ubuntu-latest
+    permissions: write-all
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build Docker image
+      run: docker build ./PublicHomePage -t tryggve-public:zap-test
+
+    - name: Run Docker container
+      run: docker run -d -p 8080:80 tryggve-public:zap-test
+
+    - name: Run ZAP Scan
+      uses: zaproxy/action-full-scan@v0.4.0
+      with:
+        target: 'http://localhost:8080' # Adjust if your app uses a different port
+
+    # Additional step to upload ZAP report to GitHub Actions artifacts, if needed
+    - uses: actions/upload-artifact@v2
+      with:
+        name: zap-report
+        path: report.json
