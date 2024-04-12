@@ -1,0 +1,54 @@
+﻿name: Security scans
+
+on: push
+
+jobs:
+  zap-scan:
+    runs-on: ubuntu-latest
+    permissions: write-all
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build code image
+        run: docker build ./PublicHomePage -t tryggve-public:zap-scan
+
+      - name: Run code container
+        run: docker run -d -p 8080:80 tryggve-public:zap-test
+
+      - name: Run ZAP Scan
+        uses: zaproxy/action-full-scan@v0.4.0
+        with:
+          target: 'http://localhost:8080'
+
+      - name: Upload ZAP scan artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: zap-report
+          path: report.json
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    permissions: write-all
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build code image
+        run: docker build ./PublicHomePage -t tryggve-public:secret-scan
+
+      - name: Run secret scan
+        run: |
+          docker run -i --rm --name=deepfence-secretscanner \
+          -v /var/run/docker.sock:/var/run/docker.sock \
+          deepfenceio/deepfence_secret_scanner:2.0.0 \
+          -image-name tryggve-public:secret-scan \
+          --output json > secret-report.json
+
+      - name: Upload secret scan artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: secret-report
+          path: secret-report.json
