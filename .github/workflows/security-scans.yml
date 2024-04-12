@@ -22,7 +22,48 @@ jobs:
         with:
           target: 'http://localhost:8080'
           artifact_name: 'zap-report'
-          cmd_options: '-J zap-report'
+          fail_action: true
+        continue-on-error: true
+
+#      - name: Notify Team on Slack
+#        if: failure()
+#        id: slack
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+#        uses: slackapi/slack-github-action@v1.25.0
+#        with:
+#          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+#          message: "Security scan identified a threat in the Docker image"
+
+      - name: Download ZAP Report Artifact
+        if: failure()
+        uses: actions/download-artifact@v2
+        with:
+          name: zap-report
+
+      - name: check if ZAP saves local report
+        run: ls -R
+#      - name: Unzip ZAP Report
+#        run: |
+#          unzip zap-report.zip
+#          ls -R
+
+#      - name: Check ZAP Report for Warnings/Errors
+#        run: |
+#          python check_zap_report.py zap-report/zap-report.json
+
+      - name: Create GitHub Issue on Failure
+        if: failure()
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'Security Vulnerability Detected',
+              body: 'A security vulnerability was detected. Please review the attached security scan report for details.',
+              labels: ['security', 'urgent']
+            })
 
   secret-scan:
     runs-on: ubuntu-latest
