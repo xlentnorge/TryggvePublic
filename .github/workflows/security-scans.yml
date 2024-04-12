@@ -22,12 +22,6 @@ jobs:
         with:
           target: 'http://localhost:8080'
 
-      - name: Upload ZAP scan artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: zap-report
-          path: report.json
-
   secret-scan:
     runs-on: ubuntu-latest
     permissions: write-all
