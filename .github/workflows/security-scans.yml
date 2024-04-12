@@ -25,7 +25,18 @@ jobs:
           fail_action: true
         continue-on-error: true
 
-#      - name: Notify Team on Slack
+      - name: Generate Slack Payload
+        if: failure()
+        run: node ./.github/scripts/generate_slack_payload.js report_json.json payload-slack-content.json
+
+      - name: Send Alerts Summary to Slack if ZAP Scan Fails
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload-file-path: "./payload-slack-content.json"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      #      - name: Notify Team on Slack
 #        if: failure()
 #        id: slack
 #        env:
@@ -35,22 +46,6 @@ jobs:
 #          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
 #          message: "Security scan identified a threat in the Docker image"
 
-      - name: Download ZAP Report Artifact
-        if: failure()
-        uses: actions/download-artifact@v2
-        with:
-          name: zap-report
-
-      - name: check if ZAP saves local report
-        run: ls -R
-#      - name: Unzip ZAP Report
-#        run: |
-#          unzip zap-report.zip
-#          ls -R
-
-#      - name: Check ZAP Report for Warnings/Errors
-#        run: |
-#          python check_zap_report.py zap-report/zap-report.json
 
       - name: Create GitHub Issue on Failure
         if: failure()
