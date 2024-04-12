@@ -18,18 +18,15 @@ jobs:
         run: docker run -d -p 8080:80 tryggve-public:zap-scan
 
       - name: Run ZAP Scan
-        run:  |
-          docker run --rm \
-            -v ${{ github.workspace }}:/zap/wrk/:rw \
-            --network="host" \
-            ghcr.io/zaproxy/zaproxy:stable \
-            zap-full-scan.py -t http://web-app:80 -m 5 -J /zap/wrk/zap-report.json
+        uses: zaproxy/action-full-scan@v0.10.0
+        with:
+          target: 'http://localhost:8080'
 
       - name: Upload ZAP scan artifact
         uses: actions/upload-artifact@v2
         with:
           name: zap-report
-          path: zap-report.json
+          path: report.json
 
   secret-scan:
     runs-on: ubuntu-latest
